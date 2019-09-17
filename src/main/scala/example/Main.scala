@@ -34,9 +34,7 @@ object Main extends StrictLogging {
 }
 
 class MyLayout extends LayoutBase[ILoggingEvent] {
-
   override def doLayout(event: ILoggingEvent): String = {
-    val currentContext = Kamon.currentContext()
     val currentSpan = Kamon.currentSpan()
 
     val operationName = currentSpan.operationName()

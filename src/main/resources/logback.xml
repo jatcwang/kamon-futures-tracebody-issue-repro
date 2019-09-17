@@ -1,19 +1,7 @@
 <configuration>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="com.mdsol.scalalogging.logback.HumanCirceCustomDataLayout">
-            </layout>
-        </encoder>
-    </appender>
-
-    <!-- Uncomment the follow blocks to log JSON to a log file -->
-
     <appender name="FILE" class="ch.qos.logback.core.FileAppender" >
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="com.mdsol.scalalogging.logback.CirceMdsolLogLayout" >
-                <component>${COMPONENT}</component>
-                <version>${COMPONENT_VERSION}</version>
-            </layout>
+            <layout class="example.MyLayout" />
         </encoder>
 
         <file>${LOG_FILENAME:-log/app.log}</file>
@@ -25,6 +13,7 @@
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="ASYNCFILE"/>
+<!--        <appender-ref ref="ASYNCFILE"/>-->
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>
