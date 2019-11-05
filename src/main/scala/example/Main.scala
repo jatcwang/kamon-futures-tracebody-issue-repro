@@ -8,6 +8,12 @@ import kamon.trace.Span
 import kamon.context.Storage
 import kamon.context.Context.Key
 import java.nio.file.{Files, Paths}
+import scala.concurrent.duration._
+
+import kamon.instrumentation.futures.scala.ScalaFutureInstrumentation._
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Await, Future}
 
 object Main extends StrictLogging {
 
@@ -15,30 +21,17 @@ object Main extends StrictLogging {
     Kamon.init()
 
     val newSpan = {
-      val builder = Kamon.spanBuilder("in child_0")
+      val builder = Kamon.spanBuilder("span0")
       builder.start()
     }
-    val scope = Kamon.currentContext().withEntry(Span.Key, newSpan)
-    val newContext = Kamon.storeContext(scope)
-    Kamon.runWithContextEntry(
-      new Key[String]("logData", ""),
-      "myData"
-    ) {
-      logger.info("in child_0")
+    Kamon.runWithSpan(newSpan) {
+      val f = for {
+        _ <- Future { traceBody("span1")(println("1")) }
+        _ <- Future { traceBody("span2")(println("2")) }
+      } yield ()
+      Await.result(f, 2.seconds)
     }
 
-    newSpan.finish()
-    newContext.close()
   }
 
-}
-
-class MyLayout extends LayoutBase[ILoggingEvent] {
-  override def doLayout(event: ILoggingEvent): String = {
-    val currentSpan = Kamon.currentSpan()
-
-    val operationName = currentSpan.operationName()
-
-    "log OperationName: " + operationName + "\n"
-  }
 }
