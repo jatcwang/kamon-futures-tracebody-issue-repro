@@ -1,19 +1,5 @@
-Start a zipkin server in docker
+Run `sbt test` and notice that the test fails because context isn't being propagated after the http client fetch
 
-`docker run --rm -d --name myzipkin -p 9411:9411 openzipkin/zipkin-slim:2.19.0`
+Uncomment the future's `.map` call in `IOContextPropagation` and somehow context propagation magically works again (test passing)
 
-run the app
-
-`sbt run`
-
-visit `http://localhost:9411/zipkin` and search for traces
-
-Expected:
-```
-Span0
-  - Span1
-  - Span2
-```
-
-Actual:
-![image](https://user-images.githubusercontent.com/4957161/68204360-b4488a00-ffbf-11e9-93bb-49b4e277ff4c.png)
+This issue exist for both Kamon 1.x and 2.x
