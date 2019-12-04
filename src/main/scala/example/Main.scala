@@ -1,18 +1,11 @@
 package example
 
-import ch.qos.logback.core.LayoutBase
-import ch.qos.logback.classic.spi.ILoggingEvent
 import com.typesafe.scalalogging.StrictLogging
 import kamon.Kamon
-import kamon.trace.Span
-import kamon.context.Storage
-import kamon.context.Context.Key
-import java.nio.file.{Files, Paths}
-import scala.concurrent.duration._
-
 import kamon.instrumentation.futures.scala.ScalaFutureInstrumentation._
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
 object Main extends StrictLogging {
@@ -31,7 +24,6 @@ object Main extends StrictLogging {
       } yield ()
       Await.result(f, 2.seconds)
     }
-
   }
 
 }
